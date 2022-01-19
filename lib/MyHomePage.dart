@@ -15,7 +15,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String currentWeatherApi = 'http://api.openweathermap.org/data/2.5/weather?';
   String forecastApi = 'http://api.openweathermap.org/data/2.5/forecast?';
 
-  String apiId = "";  // TODO SET API KEY FORM openweathermap.org
+  String apiId = "";  // TODO: SET API KEY FORM openweathermap.org
   String units = "units=metric&";
 
   var currentWeatherData;
@@ -33,8 +33,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Future getCurrentWeatherData(String query) async
   {
     var url = this.currentWeatherApi + "$query&" + units + "appid=$apiId";
-    var response = await http.get(Uri.encodeFull(url));
-    
+    var response = await http.get(Uri.parse(url));
+
     setState(() {
       this.currentWeatherData = json.decode(response.body);
     });
@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<List> getForecastWeatherData(String query) async
   {
     var url = this.forecastApi + "$query&" + units + "appid=$apiId";
-    var response = await http.get(Uri.encodeFull(url));
+    var response = await http.get(Uri.parse(url));
     var jsonResponse = json.decode(response.body);
 
     setState(() {
@@ -57,16 +57,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
     geolocator
     .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-    .then((Position position) 
+    .then((Position position)
     {
-      setState(() 
+      setState(()
       {
         this.currentWeatherData = null;
         this.forcastDataList = null;
       });
 
       var latLon = "lat=${position.latitude.toStringAsFixed(2)}&lon=${position.longitude.toStringAsFixed(2)}";
-      
+
       this.getCurrentWeatherData(latLon);
       this.getForecastWeatherData(latLon);
     })
@@ -93,13 +93,13 @@ class _MyHomePageState extends State<MyHomePage> {
     var now = DateTime.fromMillisecondsSinceEpoch(time * 1000);
     String hourString = (now.hour.toString().length <= 1 ? "0" : '') + now.hour.toString();
     String minuteString = (now.minute.toString().length <= 1 ? "0" : '') + now.minute.toString();
-  
+
     return("$hourString:$minuteString");
   }
 
   IconData getWeatherIcon(String iconName)
   {
-    switch (iconName) 
+    switch (iconName)
     {
       // day icons
       case '01d': return FontAwesomeIcons.solidSun;                    // clear sky
@@ -125,8 +125,8 @@ class _MyHomePageState extends State<MyHomePage> {
       default: print("iconName: $iconName");
     }
   }
-  
-  Widget iconWithText(IconData iconData, double space, String text) => 
+
+  Widget iconWithText(IconData iconData, double space, String text) =>
   Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: <Widget>[
@@ -147,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ],
   );
 
-  Widget weatherDetailsItem(String title, IconData iconData, String text) => 
+  Widget weatherDetailsItem(String title, IconData iconData, String text) =>
   Expanded(
     child: Card(
       color: Colors.transparent,
@@ -183,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ),
   );
 
-  Widget forcastWeatherItem(date, humidity, iconName, description, minTemp, maxTemp) => 
+  Widget forcastWeatherItem(date, humidity, iconName, description, minTemp, maxTemp) =>
   Container(
     width: double.infinity,
     padding: EdgeInsets.all(8),
@@ -210,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
             alignment: Alignment.center,
             child: iconWithText(
               FontAwesomeIcons.tint,
-              0, 
+              0,
               "$humidity%"
             )
           ),
@@ -260,7 +260,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     ),
   );
-  
+
   String getWeekName(int week)
   {
     switch (week) {
@@ -273,8 +273,8 @@ class _MyHomePageState extends State<MyHomePage> {
       case 7: return "SUN";
     }
   }
-  
-  Widget forcastList() 
+
+  Widget forcastList()
   {
     List<Widget> forcastWeatherRow = List();
 
@@ -298,7 +298,7 @@ class _MyHomePageState extends State<MyHomePage> {
       children: forcastWeatherRow,
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -362,7 +362,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             children: <Widget>[
 
                                               iconWithText(
-                                                FontAwesomeIcons.angleDoubleUp, 
+                                                FontAwesomeIcons.angleDoubleUp,
                                                 0,
                                                 "${this.currentWeatherData['main']['temp_max']}°"
                                               ),
@@ -370,7 +370,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                               Container(width: 8,),
 
                                               iconWithText(
-                                                FontAwesomeIcons.angleDoubleDown, 
+                                                FontAwesomeIcons.angleDoubleDown,
                                                 0,
                                                 "${this.currentWeatherData['main']['temp_min']}°"
                                               ),
@@ -406,7 +406,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           children: <Widget>[
 
                                             iconWithText(
-                                              FontAwesomeIcons.tshirt, 
+                                              FontAwesomeIcons.tshirt,
                                               5,
                                               "${this.currentWeatherData['main']['feels_like']}°"
                                             ),
@@ -414,7 +414,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             Container(width: 8,),
 
                                             iconWithText(
-                                              FontAwesomeIcons.tint, 
+                                              FontAwesomeIcons.tint,
                                               0,
                                               "${this.currentWeatherData['main']['humidity']}%"
                                             ),
@@ -602,7 +602,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             child: Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: <Widget>[
-                                                
+
                                                 Icon(
                                                   FontAwesomeIcons.solidSun,
                                                 ),
@@ -718,7 +718,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         ),
                                       ),
                                     ),
-                                    
+
 
                                   ],
                                 ),
@@ -747,7 +747,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                             Row(
                               children: <Widget>[
-                                
+
                                 weatherDetailsItem(
                                   "Pressure",
                                   FontAwesomeIcons.tachometerAlt,
